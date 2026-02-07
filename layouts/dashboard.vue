@@ -313,28 +313,50 @@ export default {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Hide scrollbar for Chrome, Safari */
-.sidebar::-webkit-scrollbar,
+/* Scrollbar styling - Chrome, Safari */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
 .main-content::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
-.sidebar::-webkit-scrollbar-thumb,
-.main-content::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.2);
-  border-radius: 3px;
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.sidebar::-webkit-scrollbar-track,
 .main-content::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.05);
 }
 
-/* Hide scrollbar for Firefox */
-.sidebar,
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Scrollbar - Firefox */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
 .main-content {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .badge-xs {
@@ -368,6 +390,11 @@ export default {
 .sidebar.collapsed {
   flex: 0 0 0px;
   width: 0;
+  opacity: 0;
+}
+
+.sidebar:not(.collapsed) {
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar-content {
@@ -394,16 +421,18 @@ export default {
   display: flex;
   align-items: center;
   padding: 0.625rem 0.75rem;
+  margin: 0 0.5rem;
   color: #d1d5db;
   text-decoration: none;
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s ease;
+  border-radius: 6px;
 }
 
 .menu-link:hover {
   color: #f9fafb;
-  background-color: #374151;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .menu-link.active {
@@ -435,15 +464,17 @@ export default {
 .submenu-link {
   display: block;
   padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+  margin: 0.125rem 0.5rem;
   color: #9ca3af;
   text-decoration: none;
   font-size: 0.75rem;
-  transition: all 0.15s;
+  transition: all 0.15s ease;
+  border-radius: 4px;
 }
 
 .submenu-link:hover {
   color: #f9fafb;
-  background-color: #374151;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .submenu-link.active {
@@ -471,12 +502,13 @@ export default {
 
 /* Main Content - Fill remaining width, scrollable */
 .main-content {
-  flex: 1 1 auto;  /* Chiếm hết không gian còn lại */
-  min-width: 0;    /* Cho phép co lại */
-  padding: 0.75rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1rem;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  background-color: #f8f9fa;
 }
 
 /* Mobile - Sidebar fixed overlay, no margin needed */
