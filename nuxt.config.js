@@ -23,6 +23,8 @@ export default {
   ** Global CSS
   */
   css: [
+    '~/assets/css/themes.css',     // Design System & CSS Variables
+    '~/assets/css/components.css'  // Additional component styles
   ],
   /*
   ** Plugins to load before mounting the App

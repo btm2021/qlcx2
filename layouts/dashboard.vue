@@ -1,258 +1,238 @@
 <template>
   <div class="app">
-    <!-- Top Navbar -->
-    <b-navbar type="dark" variant="dark" class="navbar-fixed">
-      <b-container fluid class="px-2">
-        <b-row no-gutters align-v="center" class="w-100">
-          <!-- Toggle & Brand -->
-          <b-col>
-            <div class="d-flex align-items-center">
-              <b-button 
-                variant="link" 
-                class="text-light p-1 mr-2" 
-                @click="toggleSidebar"
-              >
-                <b-icon icon="list" font-scale="1.2" />
-              </b-button>
-              <b-navbar-brand to="/" class="py-0">
-                <b-icon icon="shop" class="mr-1" />
-                <span class="small font-weight-bold">QL CẦM XE</span>
-              </b-navbar-brand>
-            </div>
-          </b-col>
+    <!-- Top Navbar - Minimal -->
+    <header class="navbar-mini">
+      <div class="navbar-left">
+        <button class="btn-toggle" @click="toggleSidebar">
+          <b-icon icon="list" />
+        </button>
+        <nuxt-link to="/" class="brand">
+          <div class="brand-icon">
+            <b-icon icon="shop" />
+          </div>
+        </nuxt-link>
+      </div>
 
-          <!-- Right: Noti + User -->
-          <b-col cols="auto">
-            <div class="d-flex align-items-center">
-              <!-- Notifications -->
-              <b-dropdown 
-                variant="link" 
-                no-caret 
-                toggle-class="text-light p-1"
-                right
-              >
-                <template #button-content>
-                  <b-icon icon="bell" />
-                  <b-badge 
-                    v-if="notificationCount > 0" 
-                    variant="danger" 
-                    pill 
-                    class="badge-xs"
-                  >
-                    {{ notificationCount }}
-                  </b-badge>
-                </template>
-                <b-dropdown-header class="small">Thông báo</b-dropdown-header>
-                <b-dropdown-item 
-                  v-for="(noti, idx) in notifications" 
-                  :key="idx" 
-                  class="small"
-                >
-                  <b-icon :icon="noti.icon" :variant="noti.variant" class="mr-2" />
-                  {{ noti.text }}
-                </b-dropdown-item>
-                <b-dropdown-divider />
-                <b-dropdown-item to="/notifications" class="small text-center">
-                  Xem tất cả
-                </b-dropdown-item>
-              </b-dropdown>
-
-              <!-- User -->
-              <b-dropdown 
-                variant="link" 
-                right 
-                toggle-class="text-light p-1 d-flex align-items-center"
-              >
-                <template #button-content>
-                  <b-avatar 
-                    :text="userInitials" 
-                    size="1.5rem" 
-                    variant="light" 
-                    class="mr-1" 
-                  />
-                  <span class="small d-none d-sm-inline">{{ userName }}</span>
-                  <b-icon icon="chevron-down" font-scale="0.7" class="ml-1" />
-                </template>
-                <b-dropdown-item to="/profile" class="small">
-                  <b-icon icon="person" class="mr-2" />Hồ sơ
-                </b-dropdown-item>
-                <b-dropdown-item to="/settings" class="small">
-                  <b-icon icon="gear" class="mr-2" />Cài đặt
-                </b-dropdown-item>
-                <b-dropdown-divider />
-                <b-dropdown-item @click="logout" class="small">
-                  <b-icon icon="box-arrow-right" class="mr-2" />Đăng xuất
-                </b-dropdown-item>
-              </b-dropdown>
+      <div class="navbar-right">
+        <!-- Notifications -->
+        <b-dropdown variant="link" no-caret toggle-class="btn-icon" right boundary="viewport">
+          <template #button-content>
+            <b-icon icon="bell" />
+            <span v-if="notificationCount > 0" class="noti-dot" />
+          </template>
+          <b-dropdown-header>Thông báo</b-dropdown-header>
+          <b-dropdown-item v-for="(noti, idx) in notifications" :key="idx">
+            <div class="noti-item">
+              <div class="noti-icon" :class="`bg-${noti.variant}-soft`">
+                <b-icon :icon="noti.icon" :variant="noti.variant" />
+              </div>
+              <div class="noti-content">
+                <p class="noti-text">{{ noti.text }}</p>
+                <span class="noti-time">{{ noti.time }}</span>
+              </div>
             </div>
-          </b-col>
-        </b-row>
-      </b-container>
-    </b-navbar>
+          </b-dropdown-item>
+          <b-dropdown-divider />
+          <b-dropdown-item to="/notifications" class="text-center text-primary">
+            Xem tất cả
+          </b-dropdown-item>
+        </b-dropdown>
+
+        <!-- User -->
+        <b-dropdown variant="link" right no-caret toggle-class="btn-user" boundary="viewport">
+          <template #button-content>
+            <b-avatar :text="userInitials" size="1.75rem" variant="primary" class="user-avatar" />
+          </template>
+
+          <!-- Dropdown Header -->
+          <div class="dropdown-header-user">
+            <b-avatar :text="userInitials" size="2.25rem" variant="primary" />
+            <div class="dropdown-user-info">
+              <span class="dropdown-user-name">{{ userName }}</span>
+              <span class="dropdown-user-email">{{ userEmail }}</span>
+            </div>
+          </div>
+
+          <b-dropdown-divider />
+
+          <b-dropdown-item to="/profile">
+            <b-icon icon="person" class="mr-2" />Hồ sơ
+          </b-dropdown-item>
+          <b-dropdown-item to="/settings">
+            <b-icon icon="gear" class="mr-2" />Cài đặt
+          </b-dropdown-item>
+          <b-dropdown-divider />
+          <b-dropdown-item @click="logout" class="text-danger">
+            <b-icon icon="box-arrow-right" class="mr-2" />Đăng xuất
+          </b-dropdown-item>
+        </b-dropdown>
+      </div>
+    </header>
 
     <!-- Layout -->
     <div class="layout">
-      <!-- Sidebar -->
-      <aside 
-        class="sidebar" 
-        :class="{ 
-          'sidebar-open': sidebarOpen,
-          'collapsed': !sidebarOpen 
-        }"
-      >
-        <div class="sidebar-content">
-          <!-- Menu -->
-          <nav class="sidebar-menu">
-            <div
-              v-for="item in menuItems"
-              :key="item.key"
-              class="menu-item"
-            >
-              <!-- Single -->
-              <nuxt-link
-                v-if="!item.children"
-                :to="item.to"
-                class="menu-link"
-                :class="{ active: isActive(item.to) }"
-              >
-                <b-icon :icon="item.icon" class="menu-icon" />
-                <span>{{ item.label }}</span>
-              </nuxt-link>
+      <!-- Sidebar - Minimal -->
+      <aside class="sidebar" :class="{
+        'sidebar-collapsed': !sidebarOpen,
+        'sidebar-mobile-open': sidebarOpen && isMobile
+      }">
+        <nav class="sidebar-nav">
+          <div v-for="item in menuItems" :key="item.key" class="nav-section">
+            <!-- Single Item -->
+            <nuxt-link v-if="!item.children" :to="item.to" class="nav-item" :class="{ active: isActive(item.to) }"
+              v-b-tooltip.right="!sidebarOpen ? item.label : null">
+              <div class="nav-icon">
+                <b-icon :icon="item.icon" />
+              </div>
+              <span class="nav-label">{{ item.label }}</span>
+            </nuxt-link>
 
-              <!-- Dropdown -->
-              <div v-else class="menu-group">
-                <div
-                  class="menu-link"
-                  :class="{ active: isDropdownActive(item.children) }"
-                  @click="toggleGroup(item.key)"
-                >
-                  <b-icon :icon="item.icon" class="menu-icon" />
-                  <span>{{ item.label }}</span>
-                  <b-icon 
-                    icon="chevron-down" 
-                    class="menu-arrow ml-auto"
-                    :class="{ rotate: openGroup === item.key }" 
-                  />
+            <!-- Dropdown Item -->
+            <div v-else class="nav-group" :class="{ expanded: openGroup === item.key }">
+              <div class="nav-item" :class="{ active: isDropdownActive(item.children) }" @click="toggleGroup(item.key)"
+                v-b-tooltip.right="!sidebarOpen && openGroup !== item.key ? item.label : null">
+                <div class="nav-icon">
+                  <b-icon :icon="item.icon" />
                 </div>
-                <div 
-                  v-show="openGroup === item.key" 
-                  class="submenu"
-                >
-                  <nuxt-link
-                    v-for="child in item.children"
-                    :key="child.key"
-                    :to="child.to"
-                    class="submenu-link"
-                    :class="{ active: isActive(child.to) }"
-                  >
-                    <b-icon :icon="child.icon" class="mr-2" />
-                    {{ child.label }}
-                  </nuxt-link>
-                </div>
+                <span class="nav-label">{{ item.label }}</span>
+                <b-icon icon="chevron-down" class="nav-arrow" />
+              </div>
+              <div class="nav-submenu">
+                <nuxt-link v-for="child in item.children" :key="child.key" :to="child.to" class="sub-item"
+                  :class="{ active: isActive(child.to) }">
+                  <span class="sub-dot" />
+                  <span class="sub-label">{{ child.label }}</span>
+                </nuxt-link>
               </div>
             </div>
-          </nav>
-
-          <!-- Footer -->
-          <div class="sidebar-footer">
-            <span class="small text-muted">v1.0.0</span>
           </div>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer" v-if="sidebarOpen">
+          <span class="version">v1.0.0</span>
         </div>
       </aside>
 
       <!-- Mobile Overlay -->
-      <div 
-        v-if="sidebarOpen" 
-        class="sidebar-overlay d-lg-none" 
-        @click="sidebarOpen = false"
-      />
+      <div v-if="sidebarOpen && isMobile" class="sidebar-overlay" @click="sidebarOpen = false" />
 
-      <!-- Main -->
+      <!-- Main Content Area -->
       <main class="main-content">
-        <Nuxt />
+        <!-- Top Bar with Breadcrumb -->
+        <div class="page-top-bar">
+          <nav class="breadcrumb-nav" aria-label="breadcrumb">
+            <ol class="breadcrumb-list">
+              <li class="breadcrumb-item">
+                <nuxt-link to="/" class="breadcrumb-link">
+                  <b-icon icon="house-door" class="breadcrumb-icon" />
+                </nuxt-link>
+              </li>
+              <li v-for="(crumb, index) in breadcrumbs" :key="index" class="breadcrumb-separator-wrap">
+                <span class="breadcrumb-separator">
+                  <b-icon icon="chevron-right" />
+                </span>
+              </li>
+              <li class="breadcrumb-item active">
+                <span>{{ pageTitle }}</span>
+              </li>
+            </ol>
+          </nav>
+
+          <!-- Page Title -->
+          <div class="page-header-inline">
+            <h1 class="page-title">{{ pageTitle }}</h1>
+          </div>
+        </div>
+
+        <!-- Content Box -->
+        <div class="page-content-box">
+          <Nuxt />
+        </div>
       </main>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'DashboardLayout',
   middleware: ['auth'],
 
   data() {
     return {
-      user: null,
-      sidebarOpen: true,
-      openGroup: null,
-      notificationCount: 3,
-      notifications: [
-        { icon: 'clock', variant: 'warning', text: '2 hợp đồng sắp hết hạn' },
-        { icon: 'person-plus', variant: 'info', text: 'Khách hàng mới' },
-        { icon: 'cash-stack', variant: 'success', text: 'Thanh toán thành công' }
-      ],
-      menuItems: [
-        { key: 'dashboard', label: 'Tổng quan', icon: 'house-door', to: '/' },
-        { 
-          key: 'contracts', 
-          label: 'Hợp đồng', 
-          icon: 'file-text',
-          children: [
-            { key: 'contracts-list', label: 'Danh sách', icon: 'list', to: '/contracts' },
-            { key: 'contracts-create', label: 'Tạo mới', icon: 'plus-circle', to: '/contracts/create' },
-            { key: 'contracts-expired', label: 'Sắp hết hạn', icon: 'clock', to: '/contracts/expired' }
-          ]
-        },
-        { 
-          key: 'customers', 
-          label: 'Khách hàng', 
-          icon: 'people',
-          children: [
-            { key: 'customers-list', label: 'Danh sách', icon: 'list', to: '/customers' },
-            { key: 'customers-create', label: 'Thêm mới', icon: 'plus-circle', to: '/customers/create' }
-          ]
-        },
-        { 
-          key: 'vehicles', 
-          label: 'Phương tiện', 
-          icon: 'car-front',
-          children: [
-            { key: 'vehicles-list', label: 'Danh sách', icon: 'list', to: '/vehicles' },
-            { key: 'vehicles-create', label: 'Thêm mới', icon: 'plus-circle', to: '/vehicles/create' }
-          ]
-        },
-        { key: 'reports', label: 'Báo cáo', icon: 'graph-up', to: '/reports' },
-        { key: 'settings', label: 'Cài đặt', icon: 'gear', to: '/settings' }
-      ]
+      user: null
     }
   },
 
   computed: {
+    ...mapState('ui', [
+      'sidebarOpen',
+      'openGroup',
+      'notificationCount',
+      'notifications',
+      'menuItems',
+      'pageTitles',
+      'isMobile'
+    ]),
+    ...mapGetters('ui', ['getPageTitle']),
+
     userName() {
-      return this.user?.user_metadata?.full_name || this.user?.email || 'User'
+      return this.user?.user_metadata?.full_name || this.user?.email?.split('@')[0] || 'User'
+    },
+    userEmail() {
+      return this.user?.email || ''
     },
     userInitials() {
       const name = this.user?.user_metadata?.full_name || this.user?.email || 'U'
       return name.charAt(0).toUpperCase()
+    },
+    pageTitle() {
+      // Get title from route meta, or from mapping, or from path
+      return this.$route.meta?.title ||
+        this.pageTitles[this.$route.path] ||
+        this.getTitleFromPath(this.$route.path)
+    },
+    breadcrumbs() {
+      // Generate breadcrumbs from current route
+      const path = this.$route.path
+      if (path === '/') return []
+
+      const parts = path.split('/').filter(Boolean)
+      return parts.slice(0, -1).map((part, index) => {
+        const pathSlice = '/' + parts.slice(0, index + 1).join('/')
+        return {
+          label: this.pageTitles[pathSlice] || this.formatLabel(part),
+          to: pathSlice
+        }
+      })
+    }
+  },
+
+  watch: {
+    '$route.path': {
+      immediate: true,
+      handler() {
+        // Auto-expand sidebar group based on current route
+        this.autoExpandGroup()
+      }
     }
   },
 
   mounted() {
     this.user = this.$supabase.auth.user()
-    
-    // Close sidebar on mobile by default
-    if (window.innerWidth < 992) {
-      this.sidebarOpen = false
-    }
-    
-    // Listen resize
+    this.checkMobile()
+    this.autoExpandGroup()
+
     window.addEventListener('resize', this.handleResize)
-    
+
     const { data: { subscription } } = this.$supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') this.$router.push('/login')
       this.user = session?.user || null
     })
-    
+
     this.$once('hook:beforeDestroy', () => {
       subscription?.unsubscribe()
       window.removeEventListener('resize', this.handleResize)
@@ -260,25 +240,69 @@ export default {
   },
 
   methods: {
+    ...mapMutations('ui', [
+      'SET_SIDEBAR_OPEN',
+      'SET_OPEN_GROUP',
+      'TOGGLE_GROUP',
+      'CLOSE_ALL_GROUPS',
+      'SET_MOBILE'
+    ]),
+    ...mapActions('ui', ['toggleSidebar', 'toggleGroup']),
+
+    checkMobile() {
+      const isMobile = window.innerWidth < 992
+      this.SET_MOBILE(isMobile)
+      if (isMobile && this.sidebarOpen) {
+        this.SET_SIDEBAR_OPEN(false)
+      }
+    },
+
+    handleResize() {
+      const wasMobile = this.isMobile
+      const isMobile = window.innerWidth < 992
+      this.SET_MOBILE(isMobile)
+
+      if (!wasMobile && isMobile) {
+        this.SET_SIDEBAR_OPEN(false)
+      } else if (wasMobile && !isMobile) {
+        this.SET_SIDEBAR_OPEN(true)
+      }
+    },
+
     isActive(path) {
       return this.$route.path === path || this.$route.path.startsWith(path + '/')
     },
+
     isDropdownActive(children) {
       return children.some(child => this.isActive(child.to))
     },
-    toggleGroup(key) {
-      this.openGroup = this.openGroup === key ? null : key
-    },
-    toggleSidebar() {
-      this.sidebarOpen = !this.sidebarOpen
-    },
-    handleResize() {
-      if (window.innerWidth >= 992) {
-        this.sidebarOpen = true
-      } else {
-        this.sidebarOpen = false
+
+    autoExpandGroup() {
+      // Auto expand sidebar group based on current route
+      const currentPath = this.$route.path
+      for (const item of this.menuItems) {
+        if (item.children && item.children.some(child => currentPath.startsWith(child.to))) {
+          this.SET_OPEN_GROUP(item.key)
+          return
+        }
       }
     },
+
+    getTitleFromPath(path) {
+      // Convert path to title
+      if (path === '/') return 'Tổng quan'
+      const parts = path.split('/').filter(Boolean)
+      const lastPart = parts[parts.length - 1]
+      return this.formatLabel(lastPart)
+    },
+
+    formatLabel(str) {
+      // Convert kebab-case or snake_case to Title Case
+      return str
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase())
+    },
+
     async logout() {
       try {
         await this.$auth.signOut()
@@ -292,256 +316,602 @@ export default {
 </script>
 
 <style scoped>
-/* App - Prevent page scroll */
+/* ========== CSS Variables ========== */
+:root {
+  --navbar-height: 48px;
+  --sidebar-width: 220px;
+  --sidebar-collapsed: 60px;
+  --primary: #3b82f6;
+  --primary-soft: #eff6ff;
+  --success-soft: #ecfdf5;
+  --warning-soft: #fffbeb;
+  --info-soft: #eff6ff;
+  --danger-soft: #fef2f2;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+}
+
+/* ========== App Container ========== */
 .app {
   height: 100vh;
   overflow: hidden;
-  background-color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
 }
 
-/* Navbar - Fixed, no scroll */
-.navbar-fixed {
+/* ========== Navbar - Minimal ========== */
+.navbar-mini {
   height: 40px;
-  padding: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1030;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1030;
 }
 
-/* Scrollbar styling - Chrome, Safari */
-.sidebar::-webkit-scrollbar {
-  width: 5px;
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
 }
 
-.main-content::-webkit-scrollbar {
-  width: 8px;
+.btn-toggle {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 1rem;
 }
 
-.sidebar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
+.btn-toggle:hover {
+  background: #f3f4f6;
+  color: #374151;
 }
 
-.main-content::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
 }
 
-.sidebar::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
+.brand-icon {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
 }
 
-.main-content::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
 }
 
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.15s ease;
+  font-size: 0.9375rem;
 }
 
-.main-content::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.3);
+.btn-icon:hover {
+  background: #f3f4f6;
+  color: #374151;
 }
 
-/* Scrollbar - Firefox */
-.sidebar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-}
-
-.main-content {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-}
-
-.badge-xs {
-  font-size: 0.5rem;
-  padding: 0.1em 0.3em;
+.noti-dot {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 1.5px solid #ffffff;
 }
 
-/* Layout - Fixed height, no scroll, below navbar */
+.btn-user {
+  display: flex;
+  align-items: center;
+  padding: 0.125rem;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-user:hover {
+  background: #f3f4f6;
+}
+
+.user-avatar {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ========== Layout ========== */
 .layout {
   display: flex;
+  flex: 1;
+  overflow: hidden;
   height: calc(100vh - 40px);
-  margin-top: 40px;
+}
+
+/* ========== Sidebar - Minimal ========== */
+.sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.25s ease;
   overflow: hidden;
 }
 
-/* Sidebar - Collapsible width */
-.sidebar {
-  width: 200px;
-  background-color: #1f2937;
-  flex: 0 0 200px;
-  height: 100%;
+.sidebar-collapsed {
+  width: 60px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 0.5rem;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: flex-basis 0.3s ease, width 0.3s ease;
 }
 
-/* Collapsed state */
-.sidebar.collapsed {
-  flex: 0 0 0px;
-  width: 0;
-  opacity: 0;
+.nav-section {
+  margin-bottom: 0.25rem;
 }
 
-.sidebar:not(.collapsed) {
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-}
-
-.sidebar-content {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-.sidebar-menu {
-  flex: 1;
-  padding: 0.5rem 0;
-}
-
-/* Menu Item */
-.menu-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.menu-item:last-child {
-  border-bottom: none;
-}
-
-.menu-link {
+.nav-item {
   display: flex;
   align-items: center;
-  padding: 0.625rem 0.75rem;
-  margin: 0 0.5rem;
-  color: #d1d5db;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  color: #4b5563;
   text-decoration: none;
   font-size: 0.8125rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 6px;
+  transition: all 0.15s ease;
+  height: 36px;
 }
 
-.menu-link:hover {
-  color: #f9fafb;
-  background-color: rgba(255, 255, 255, 0.08);
+.nav-item:hover {
+  background: #f3f4f6;
+  color: #1f2937;
 }
 
-.menu-link.active {
-  color: #60a5fa;
-  background: linear-gradient(90deg, rgba(96, 165, 250, 0.15) 0%, rgba(96, 165, 250, 0.05) 100%);
-  border-left: 3px solid #60a5fa;
+.nav-item.active {
+  background: #eff6ff;
+  color: #2563eb;
 }
 
-.menu-icon {
-  width: 1.25rem;
-  margin-right: 0.5rem;
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.9375rem;
 }
 
-.menu-arrow {
+.nav-label {
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-collapsed .nav-label,
+.sidebar-collapsed .nav-arrow {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-arrow {
+  margin-left: auto;
   font-size: 0.625rem;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
-.menu-arrow.rotate {
+.nav-group.expanded .nav-arrow {
   transform: rotate(180deg);
 }
 
 /* Submenu */
-.submenu {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-left: 3px solid transparent;
+.nav-submenu {
+  margin-top: 0.25rem;
+  padding-left: 0.5rem;
+  display: none;
 }
 
-.submenu-link {
+.nav-group.expanded .nav-submenu {
   display: block;
-  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
-  margin: 0.125rem 0.5rem;
-  color: #9ca3af;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sub-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.75rem;
+  padding-left: 2rem;
+  border-radius: 6px;
+  color: #6b7280;
   text-decoration: none;
   font-size: 0.75rem;
   transition: all 0.15s ease;
-  border-radius: 4px;
 }
 
-.submenu-link:hover {
-  color: #f9fafb;
-  background-color: rgba(255, 255, 255, 0.08);
+.sub-item:hover {
+  color: #374151;
+  background: #f9fafb;
 }
 
-.submenu-link.active {
-  color: #60a5fa;
-  background-color: rgba(96, 165, 250, 0.1);
+.sub-item.active {
+  color: #2563eb;
+  background: #eff6ff;
+  font-weight: 500;
+}
+
+.sub-dot {
+  width: 4px;
+  height: 4px;
+  background: #d1d5db;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sub-item.active .sub-dot {
+  background: #3b82f6;
 }
 
 /* Sidebar Footer */
 .sidebar-footer {
   padding: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid #e5e7eb;
   text-align: center;
 }
 
-/* Overlay */
+.version {
+  font-size: 0.6875rem;
+  color: #9ca3af;
+}
+
+.sidebar-collapsed .sidebar-footer {
+  display: none;
+}
+
+/* ========== Scrollbar Styling ========== */
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 2px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
+.main-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Firefox Scrollbar */
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
+}
+
+.main-content {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+/* ========== Main Content ========== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.25rem;
+  background-color: #f8fafc;
+}
+
+/* ========== Page Top Bar (Breadcrumb + Title) ========== */
+.page-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+/* ========== Breadcrumb ========== */
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.375rem;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.75rem;
+  padding: 0.125rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.breadcrumb-link:hover {
+  color: #3b82f6;
+}
+
+.breadcrumb-icon {
+  font-size: 0.8125rem;
+}
+
+.breadcrumb-separator-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-separator {
+  color: #d1d5db;
+  font-size: 0.625rem;
+}
+
+.breadcrumb-item.active {
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* ========== Page Header Inline ========== */
+.page-header-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page-header-inline .page-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* ========== Page Content Box ========== */
+.page-content-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem;
+  min-height: calc(100vh - 200px);
+}
+
+/* ========== Overlay ========== */
 .sidebar-overlay {
   position: fixed;
   top: 40px;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1015;
+  backdrop-filter: blur(2px);
 }
 
-/* Main Content - Fill remaining width, scrollable */
-.main-content {
-  flex: 1 1 auto;
+/* ========== Dropdown Styles ========== */
+.dropdown-header-user {
+  padding: 0.875rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dropdown-user-info {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  padding: 1rem;
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: #f8f9fa;
 }
 
-/* Mobile - Sidebar fixed overlay, no margin needed */
+.dropdown-user-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dropdown-user-email {
+  font-size: 0.6875rem;
+  color: #6b7280;
+}
+
+.noti-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.125rem 0;
+}
+
+.noti-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+.bg-success-soft {
+  background: #ecfdf5;
+}
+
+.bg-warning-soft {
+  background: #fffbeb;
+}
+
+.bg-info-soft {
+  background: #eff6ff;
+}
+
+.bg-danger-soft {
+  background: #fef2f2;
+}
+
+.noti-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.noti-text {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #374151;
+  line-height: 1.4;
+  font-size: 0.8125rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.noti-time {
+  font-size: 0.625rem;
+  color: #9ca3af;
+}
+
+/* ========== Mobile Responsive ========== */
 @media (max-width: 991px) {
   .sidebar {
     position: fixed;
     top: 40px;
-    bottom: 0;
     left: 0;
+    bottom: 0;
     z-index: 1020;
-    flex: none;
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    width: 220px;
   }
-  
-  .sidebar.sidebar-open {
+
+  .sidebar-mobile-open {
     transform: translateX(0);
   }
-  
-  .main-content {
-    flex: 1;
-    min-width: 0;
+
+  .sidebar-collapsed {
+    width: 220px;
+  }
+
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar-footer {
+    display: block;
+  }
+
+  .page-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 }
 
 @media (min-width: 992px) {
-  .sidebar {
-    position: relative;
-    transform: none !important;
-  }
-  
   .sidebar-overlay {
-    display: none !important;
+    display: none;
   }
 }
 </style>

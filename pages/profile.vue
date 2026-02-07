@@ -1,113 +1,146 @@
 <template>
   <div>
-    <h2 class="font-weight-bold mb-4">Hồ sơ cá nhân</h2>
+    <!-- Header -->
+    <div class="top-bar">
+      <div class="d-flex flex-column">
+        <h5 class="font-weight-bold mb-0">Hồ sơ cá nhân</h5>
+        <div class="text-muted small">Thông tin tài khoản và bảo mật</div>
+      </div>
+    </div>
 
     <b-row>
+      <!-- Avatar Section -->
       <b-col lg="4">
-        <b-card class="border-0 shadow-sm text-center">
-          <b-avatar
-            :text="userInitials"
-            size="120"
-            variant="primary"
-            class="mb-3"
-          />
-          <h4 class="font-weight-bold">{{ userName }}</h4>
-          <p class="text-muted">{{ user?.email }}</p>
-          <b-badge variant="light">Thành viên</b-badge>
-        </b-card>
+        <div class="card text-center mb-4">
+          <div class="card-body py-5">
+            <b-avatar
+              :text="userInitials"
+              size="100"
+              variant="primary"
+              class="mb-3 shadow-sm"
+              style="border: 4px solid var(--color-white);"
+            />
+            <h4 class="font-weight-bold mb-1">{{ userName }}</h4>
+            <p class="text-muted small mb-3">{{ user?.email }}</p>
+            <span class="badge badge-primary badge-pill px-3">Thành viên</span>
+          </div>
+        </div>
       </b-col>
 
+      <!-- Profile Details Section -->
       <b-col lg="8">
-        <b-card class="border-0 shadow-sm">
-          <template #header>
-            <h5 class="mb-0 font-weight-bold">Thông tin cá nhân</h5>
-          </template>
-
-          <b-form @submit.prevent="updateProfile">
-            <b-row>
-              <b-col md="6">
-                <b-form-group label="Họ và tên">
+        <!-- Info Card -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="card-icon bg-primary-soft">
+              <b-icon icon="person" variant="primary" />
+            </div>
+            <span class="card-title">Thông tin cá nhân</span>
+          </div>
+          <div class="card-body">
+            <b-form @submit.prevent="updateProfile">
+              <b-row>
+                <b-col md="6" class="mb-3">
+                  <label class="form-label">Họ và tên</label>
                   <b-form-input
                     v-model="form.full_name"
+                    class="form-control"
                     placeholder="Nhập họ tên"
                   />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group label="Email">
+                </b-col>
+                <b-col md="6" class="mb-3">
+                  <label class="form-label">Email (không thể đổi)</label>
                   <b-form-input
                     v-model="form.email"
+                    class="form-control"
                     type="email"
                     disabled
                   />
-                </b-form-group>
-              </b-col>
-              <b-col md="6">
-                <b-form-group label="Số điện thoại">
+                </b-col>
+                <b-col md="6" class="mb-3">
+                  <label class="form-label">Số điện thoại</label>
                   <b-form-input
                     v-model="form.phone"
+                    class="form-control"
                     placeholder="Nhập số điện thoại"
                   />
-                </b-form-group>
-              </b-col>
-            </b-row>
+                </b-col>
+              </b-row>
 
-            <b-button
-              type="submit"
-              variant="primary"
-              :disabled="updating"
-            >
-              <b-spinner v-if="updating" small class="mr-2" />
-              Cập nhật thông tin
-            </b-button>
-          </b-form>
-        </b-card>
+              <div class="mt-2">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  :disabled="updating"
+                >
+                  <b-spinner v-if="updating" small class="mr-2" />
+                  Cập nhật thông tin
+                </button>
+              </div>
+            </b-form>
+          </div>
+        </div>
 
-        <b-card class="border-0 shadow-sm mt-4">
-          <template #header>
-            <h5 class="mb-0 font-weight-bold">Đổi mật khẩu</h5>
-          </template>
+        <!-- Password Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon bg-warning-soft">
+              <b-icon icon="shield-lock" variant="warning" />
+            </div>
+            <span class="card-title">Đổi mật khẩu</span>
+          </div>
+          <div class="card-body">
+            <b-form @submit.prevent="changePassword">
+              <div class="mb-3">
+                <label class="form-label">Mật khẩu hiện tại</label>
+                <b-form-input
+                  v-model="passwordForm.current"
+                  class="form-control"
+                  type="password"
+                  required
+                />
+              </div>
 
-          <b-form @submit.prevent="changePassword">
-            <b-form-group label="Mật khẩu hiện tại">
-              <b-form-input
-                v-model="passwordForm.current"
-                type="password"
-                required
-              />
-            </b-form-group>
+              <b-row>
+                <b-col md="6" class="mb-3">
+                  <label class="form-label">Mật khẩu mới</label>
+                  <b-form-input
+                    v-model="passwordForm.new"
+                    class="form-control"
+                    type="password"
+                    required
+                    minlength="6"
+                  />
+                </b-col>
 
-            <b-form-group label="Mật khẩu mới">
-              <b-form-input
-                v-model="passwordForm.new"
-                type="password"
-                required
-                minlength="6"
-              />
-            </b-form-group>
+                <b-col md="6" class="mb-3">
+                  <label class="form-label">Xác nhận mật khẩu mới</label>
+                  <b-form-input
+                    v-model="passwordForm.confirm"
+                    class="form-control"
+                    type="password"
+                    required
+                    :state="passwordMatch"
+                  />
+                  <div v-if="passwordForm.confirm && !passwordMatch" class="text-danger small mt-1">
+                    Mật khẩu không khớp
+                  </div>
+                </b-col>
+              </b-row>
 
-            <b-form-group label="Xác nhận mật khẩu mới">
-              <b-form-input
-                v-model="passwordForm.confirm"
-                type="password"
-                required
-                :state="passwordMatch"
-              />
-              <b-form-invalid-feedback v-if="!passwordMatch">
-                Mật khẩu không khớp
-              </b-form-invalid-feedback>
-            </b-form-group>
-
-            <b-button
-              type="submit"
-              variant="warning"
-              :disabled="!passwordMatch || changingPassword"
-            >
-              <b-spinner v-if="changingPassword" small class="mr-2" />
-              Đổi mật khẩu
-            </b-button>
-          </b-form>
-        </b-card>
+              <div class="mt-2">
+                <button
+                  type="submit"
+                  class="btn btn-warning"
+                  :disabled="!passwordMatch || changingPassword"
+                >
+                  <b-spinner v-if="changingPassword" small class="mr-2" />
+                  Đổi mật khẩu
+                </button>
+              </div>
+            </b-form>
+          </div>
+        </div>
       </b-col>
     </b-row>
   </div>

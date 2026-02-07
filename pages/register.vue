@@ -1,92 +1,107 @@
 <template>
-  <div>
-    <b-form @submit.prevent="handleRegister">
-      <b-form-group label="Họ và tên" label-for="fullName">
-        <b-form-input
-          id="fullName"
-          v-model="form.fullName"
-          placeholder="Nhập họ và tên"
-          required
-        />
-      </b-form-group>
+  <div class="card border-0 shadow-lg">
+    <div class="card-body p-4 p-md-5">
+      <div class="text-center mb-4">
+        <h4 class="font-weight-bold mb-1">Tạo tài khoản mới</h4>
+        <p class="text-muted small">Đăng ký để bắt đầu quản lý cầm xe</p>
+      </div>
 
-      <b-form-group label="Email" label-for="email">
-        <b-form-input
-          id="email"
-          v-model="form.email"
-          type="email"
-          placeholder="Nhập email"
-          required
-          :state="emailState"
-        />
-        <b-form-invalid-feedback v-if="form.email && !emailState">
-          Email không hợp lệ
-        </b-form-invalid-feedback>
-      </b-form-group>
-
-      <b-form-group label="Mật khẩu" label-for="password">
-        <b-input-group>
+      <b-form @submit.prevent="handleRegister">
+        <div class="mb-3">
+          <label class="form-label">Họ và tên</label>
           <b-form-input
-            id="password"
-            v-model="form.password"
-            :type="showPassword ? 'text' : 'password'"
-            placeholder="Nhập mật khẩu (ít nhất 6 ký tự)"
+            id="fullName"
+            v-model="form.fullName"
+            class="form-control"
+            placeholder="Nguyễn Văn A"
             required
-            minlength="6"
           />
-          <b-input-group-append>
-            <b-button
-              variant="outline-secondary"
-              @click="showPassword = !showPassword"
-              tabindex="-1"
-            >
-              <b-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
-            </b-button>
-          </b-input-group-append>
-        </b-input-group>
-        <b-form-text v-if="form.password">
-          Độ mạnh: <span :class="passwordStrengthClass">{{ passwordStrengthText }}</span>
-        </b-form-text>
-      </b-form-group>
+        </div>
 
-      <b-form-group label="Xác nhận mật khẩu" label-for="confirmPassword">
-        <b-form-input
-          id="confirmPassword"
-          v-model="form.confirmPassword"
-          :type="showPassword ? 'text' : 'password'"
-          placeholder="Nhập lại mật khẩu"
-          required
-          :state="passwordMatch"
-        />
-        <b-form-invalid-feedback v-if="form.confirmPassword && !passwordMatch">
-          Mật khẩu không khớp
-        </b-form-invalid-feedback>
-      </b-form-group>
+        <div class="mb-3">
+          <label class="form-label">Email đăng ký</label>
+          <b-form-input
+            id="email"
+            v-model="form.email"
+            type="email"
+            class="form-control"
+            placeholder="example@gmail.com"
+            required
+            :state="emailState"
+          />
+          <div v-if="form.email && !emailState" class="text-danger small mt-1">
+            Email không hợp lệ
+          </div>
+        </div>
 
-      <b-form-group>
-        <b-form-checkbox v-model="form.agree" required>
-          Tôi đồng ý với <b-link to="#">điều khoản sử dụng</b-link>
-        </b-form-checkbox>
-      </b-form-group>
+        <div class="mb-3">
+          <label class="form-label">Mật khẩu</label>
+          <b-input-group>
+            <b-form-input
+              id="password"
+              v-model="form.password"
+              class="form-control"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              required
+              minlength="6"
+            />
+            <b-input-group-append>
+              <button
+                type="button"
+                class="btn btn-outline border-left-0"
+                @click="showPassword = !showPassword"
+                tabindex="-1"
+                style="border-top-left-radius: 0; border-bottom-left-radius: 0;"
+              >
+                <b-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
+              </button>
+            </b-input-group-append>
+          </b-input-group>
+          <div v-if="form.password" class="small mt-1">
+            Độ mạnh: <span :class="passwordStrengthClass">{{ passwordStrengthText }}</span>
+          </div>
+        </div>
 
-      <b-button
-        type="submit"
-        variant="primary"
-        block
-        size="lg"
-        :disabled="loading || !isValid"
-      >
-        <b-spinner v-if="loading" small class="mr-2" />
-        <b-icon v-else icon="person-plus" class="mr-2" />
-        {{ loading ? 'Đang đăng ký...' : 'Đăng ký' }}
-      </b-button>
-    </b-form>
+        <div class="mb-4">
+          <label class="form-label">Xác nhận mật khẩu</label>
+          <b-form-input
+            id="confirmPassword"
+            v-model="form.confirmPassword"
+            class="form-control"
+            :type="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            required
+            :state="passwordMatch"
+          />
+          <div v-if="form.confirmPassword && !passwordMatch" class="text-danger small mt-1">
+            Mật khẩu không khớp
+          </div>
+        </div>
 
-    <div class="text-center mt-4">
-      <p class="mb-0">
-        Đã có tài khoản?
-        <b-link to="/login" class="font-weight-bold">Đăng nhập</b-link>
-      </p>
+        <div class="mb-4">
+          <b-form-checkbox v-model="form.agree" required class="small">
+            Tôi đồng ý với <b-link to="#" class="text-primary font-weight-medium">điều khoản sử dụng</b-link>
+          </b-form-checkbox>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg w-100 py-3 mb-3"
+          :disabled="loading || !isValid"
+        >
+          <b-spinner v-if="loading" small class="mr-2" />
+          <b-icon v-else icon="person-plus" class="mr-2" />
+          {{ loading ? 'Đang đăng ký...' : 'Đăng ký' }}
+        </button>
+      </b-form>
+
+      <div class="text-center mt-3">
+        <p class="mb-0 small text-muted">
+          Đã có tài khoản?
+          <b-link to="/login" class="font-weight-bold text-primary">Đăng nhập</b-link>
+        </p>
+      </div>
     </div>
   </div>
 </template>
