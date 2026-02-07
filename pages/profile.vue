@@ -1,155 +1,91 @@
 <template>
-  <div>
-    <!-- Header -->
-    <div class="top-bar">
-      <div class="d-flex flex-column">
-        <h5 class="font-weight-bold mb-0">Hồ sơ cá nhân</h5>
-        <div class="text-muted small">Thông tin tài khoản và bảo mật</div>
+  <div class="profile-container">
+    <div class="row">
+      <!-- User Overview -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm text-center p-4 mb-4">
+          <div class="user-avatar-wrap mb-3">
+            <b-avatar :text="userInitials" size="100" variant="primary" class="shadow-sm" />
+          </div>
+          <h4 class="fw-bold mb-1">{{ userName }}</h4>
+          <p class="text-muted small mb-0">{{ user?.email }}</p>
+          <div class="mt-3">
+            <span class="badge badge-primary-soft text-primary px-3">Quản trị viên</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Settings -->
+      <div class="col-lg-8">
+        <!-- Profile Info -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-4">Thông tin cá nhân</h5>
+
+            <b-form @submit.prevent="updateProfile">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label-small">Họ và tên</label>
+                  <b-form-input v-model="form.full_name" class="form-control-custom" placeholder="Nguyễn Văn A" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label-small">Email</label>
+                  <b-form-input v-model="form.email" class="form-control-custom" type="email" disabled />
+                  <small class="text-muted">Email không thể thay đổi</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label-small">Số điện thoại</label>
+                  <b-form-input v-model="form.phone" class="form-control-custom" placeholder="0901234567" />
+                </div>
+              </div>
+
+              <div class="mt-4 pt-2">
+                <button type="submit" class="btn btn-primary px-4 fw-bold" :disabled="updating">
+                  <b-spinner v-if="updating" small class="mr-2" />
+                  Lưu thay đổi
+                </button>
+              </div>
+            </b-form>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h5 class="fw-bold mb-4">Bảo mật</h5>
+
+            <b-form @submit.prevent="changePassword">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label-small">Mật khẩu mới</label>
+                  <b-form-input v-model="passwordForm.new" class="form-control-custom" type="password"
+                    placeholder="Tối thiểu 6 ký tự" required minlength="6" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label-small">Xác nhận mật khẩu</label>
+                  <b-form-input v-model="passwordForm.confirm" class="form-control-custom" type="password"
+                    placeholder="Nhập lại mật khẩu mới" required :state="passwordMatch" />
+                </div>
+              </div>
+
+              <div class="mt-4 pt-2">
+                <button type="submit" class="btn btn-outline-primary px-4 fw-bold"
+                  :disabled="!passwordMatch || !passwordForm.new || changingPassword">
+                  <b-spinner v-if="changingPassword" small class="mr-2" />
+                  Cập nhật mật khẩu
+                </button>
+              </div>
+            </b-form>
+          </div>
+        </div>
       </div>
     </div>
-
-    <b-row>
-      <!-- Avatar Section -->
-      <b-col lg="4">
-        <div class="card text-center mb-4">
-          <div class="card-body py-5">
-            <b-avatar
-              :text="userInitials"
-              size="100"
-              variant="primary"
-              class="mb-3 shadow-sm"
-              style="border: 4px solid var(--color-white);"
-            />
-            <h4 class="font-weight-bold mb-1">{{ userName }}</h4>
-            <p class="text-muted small mb-3">{{ user?.email }}</p>
-            <span class="badge badge-primary badge-pill px-3">Thành viên</span>
-          </div>
-        </div>
-      </b-col>
-
-      <!-- Profile Details Section -->
-      <b-col lg="8">
-        <!-- Info Card -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <div class="card-icon bg-primary-soft">
-              <b-icon icon="person" variant="primary" />
-            </div>
-            <span class="card-title">Thông tin cá nhân</span>
-          </div>
-          <div class="card-body">
-            <b-form @submit.prevent="updateProfile">
-              <b-row>
-                <b-col md="6" class="mb-3">
-                  <label class="form-label">Họ và tên</label>
-                  <b-form-input
-                    v-model="form.full_name"
-                    class="form-control"
-                    placeholder="Nhập họ tên"
-                  />
-                </b-col>
-                <b-col md="6" class="mb-3">
-                  <label class="form-label">Email (không thể đổi)</label>
-                  <b-form-input
-                    v-model="form.email"
-                    class="form-control"
-                    type="email"
-                    disabled
-                  />
-                </b-col>
-                <b-col md="6" class="mb-3">
-                  <label class="form-label">Số điện thoại</label>
-                  <b-form-input
-                    v-model="form.phone"
-                    class="form-control"
-                    placeholder="Nhập số điện thoại"
-                  />
-                </b-col>
-              </b-row>
-
-              <div class="mt-2">
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  :disabled="updating"
-                >
-                  <b-spinner v-if="updating" small class="mr-2" />
-                  Cập nhật thông tin
-                </button>
-              </div>
-            </b-form>
-          </div>
-        </div>
-
-        <!-- Password Card -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon bg-warning-soft">
-              <b-icon icon="shield-lock" variant="warning" />
-            </div>
-            <span class="card-title">Đổi mật khẩu</span>
-          </div>
-          <div class="card-body">
-            <b-form @submit.prevent="changePassword">
-              <div class="mb-3">
-                <label class="form-label">Mật khẩu hiện tại</label>
-                <b-form-input
-                  v-model="passwordForm.current"
-                  class="form-control"
-                  type="password"
-                  required
-                />
-              </div>
-
-              <b-row>
-                <b-col md="6" class="mb-3">
-                  <label class="form-label">Mật khẩu mới</label>
-                  <b-form-input
-                    v-model="passwordForm.new"
-                    class="form-control"
-                    type="password"
-                    required
-                    minlength="6"
-                  />
-                </b-col>
-
-                <b-col md="6" class="mb-3">
-                  <label class="form-label">Xác nhận mật khẩu mới</label>
-                  <b-form-input
-                    v-model="passwordForm.confirm"
-                    class="form-control"
-                    type="password"
-                    required
-                    :state="passwordMatch"
-                  />
-                  <div v-if="passwordForm.confirm && !passwordMatch" class="text-danger small mt-1">
-                    Mật khẩu không khớp
-                  </div>
-                </b-col>
-              </b-row>
-
-              <div class="mt-2">
-                <button
-                  type="submit"
-                  class="btn btn-warning"
-                  :disabled="!passwordMatch || changingPassword"
-                >
-                  <b-spinner v-if="changingPassword" small class="mr-2" />
-                  Đổi mật khẩu
-                </button>
-              </div>
-            </b-form>
-          </div>
-        </div>
-      </b-col>
-    </b-row>
   </div>
 </template>
 
 <script>
 export default {
   name: 'ProfilePage',
-  
   layout: 'dashboard',
 
   data() {
@@ -161,7 +97,6 @@ export default {
         phone: ''
       },
       passwordForm: {
-        current: '',
         new: '',
         confirm: ''
       },
@@ -172,10 +107,10 @@ export default {
 
   computed: {
     userName() {
-      return this.user?.user_metadata?.full_name || this.user?.email || 'User'
+      return this.user?.full_name || this.user?.email || 'User'
     },
     userInitials() {
-      const name = this.user?.user_metadata?.full_name || this.user?.email || 'U'
+      const name = this.user?.full_name || this.user?.email || 'U'
       return name.charAt(0).toUpperCase()
     },
     passwordMatch() {
@@ -190,39 +125,46 @@ export default {
 
   methods: {
     async fetchUser() {
-      const user = this.$supabase.auth.user()
-      this.user = user
-      
-      if (user) {
-        this.form.full_name = user.user_metadata?.full_name || ''
+      const userStr = localStorage.getItem('auth_user')
+      if (userStr) {
+        const user = JSON.parse(userStr)
+        this.user = user
+        this.form.full_name = user.full_name || ''
         this.form.email = user.email || ''
-        this.form.phone = user.user_metadata?.phone || ''
+        this.form.phone = user.phone_number || ''
       }
     },
 
     async updateProfile() {
       this.updating = true
-      
+
       try {
-        const { error } = await this.$supabase.auth.update({
-          data: {
+        const { data, error } = await this.$supabase
+          .from('users')
+          .update({
             full_name: this.form.full_name,
-            phone: this.form.phone
-          }
-        })
+            phone_number: this.form.phone
+          })
+          .eq('id', this.user.id)
+          .select()
 
         if (error) throw error
 
+        const updatedUser = data[0]
+        localStorage.setItem('auth_user', JSON.stringify(updatedUser))
+
         this.$bvToast.toast('Cập nhật thông tin thành công!', {
           title: 'Thành công',
-          variant: 'success'
+          variant: 'success',
+          solid: true
         })
 
         await this.fetchUser()
       } catch (error) {
         this.$bvToast.toast(error.message, {
-          title: 'Lỗi',
-          variant: 'danger'
+          title: 'Lỗi cập nhật',
+          variant: 'danger',
+          solid: true
         })
       } finally {
         this.updating = false
@@ -231,24 +173,29 @@ export default {
 
     async changePassword() {
       this.changingPassword = true
-      
+
       try {
-        const { user, error } = await this.$supabase.auth.update({
-          password: this.passwordForm.new
-        })
+        const { error } = await this.$supabase
+          .from('users')
+          .update({
+            password: this.passwordForm.new
+          })
+          .eq('id', this.user.id)
 
         if (error) throw error
 
         this.$bvToast.toast('Đổi mật khẩu thành công!', {
           title: 'Thành công',
-          variant: 'success'
+          variant: 'success',
+          solid: true
         })
 
-        this.passwordForm = { current: '', new: '', confirm: '' }
+        this.passwordForm = { new: '', confirm: '' }
       } catch (error) {
         this.$bvToast.toast(error.message, {
-          title: 'Lỗi',
-          variant: 'danger'
+          title: 'Lỗi đổi mật khẩu',
+          variant: 'danger',
+          solid: true
         })
       } finally {
         this.changingPassword = false
@@ -257,3 +204,44 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+.form-label-small {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-gray-600);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control-custom {
+  height: 44px;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  padding: 0 16px;
+  transition: all 0.2s;
+}
+
+.form-control-custom:focus {
+  background: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-soft);
+  outline: none;
+}
+
+.badge-primary-soft {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.user-avatar-wrap {
+  display: flex;
+  justify-content: center;
+}
+</style>

@@ -56,13 +56,20 @@
   --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
 
   /* Font Sizes */
-  --font-size-xs: 0.625rem;    /* 10px */
-  --font-size-sm: 0.75rem;     /* 12px */
-  --font-size-base: 0.8125rem; /* 13px */
-  --font-size-md: 0.875rem;    /* 14px */
-  --font-size-lg: 1rem;        /* 16px */
-  --font-size-xl: 1.125rem;    /* 18px */
-  --font-size-2xl: 1.25rem;    /* 20px */
+  --font-size-xs: 0.625rem;
+  /* 10px */
+  --font-size-sm: 0.75rem;
+  /* 12px */
+  --font-size-base: 0.8125rem;
+  /* 13px */
+  --font-size-md: 0.875rem;
+  /* 14px */
+  --font-size-lg: 1rem;
+  /* 16px */
+  --font-size-xl: 1.125rem;
+  /* 18px */
+  --font-size-2xl: 1.25rem;
+  /* 20px */
 
   /* Font Weights */
   --font-weight-normal: 400;
@@ -79,14 +86,22 @@
      Spacing
      ------------------------------------------------------------------------- */
   --space-0: 0;
-  --space-1: 0.25rem;   /* 4px */
-  --space-2: 0.5rem;    /* 8px */
-  --space-3: 0.625rem;  /* 10px */
-  --space-4: 0.75rem;   /* 12px */
-  --space-5: 1rem;      /* 16px */
-  --space-6: 1.25rem;   /* 20px */
-  --space-7: 1.5rem;    /* 24px */
-  --space-8: 2rem;      /* 32px */
+  --space-1: 0.25rem;
+  /* 4px */
+  --space-2: 0.5rem;
+  /* 8px */
+  --space-3: 0.625rem;
+  /* 10px */
+  --space-4: 0.75rem;
+  /* 12px */
+  --space-5: 1rem;
+  /* 16px */
+  --space-6: 1.25rem;
+  /* 20px */
+  --space-7: 1.5rem;
+  /* 24px */
+  --space-8: 2rem;
+  /* 32px */
 
   /* -------------------------------------------------------------------------
      Border Radius
@@ -185,11 +200,25 @@
 }
 
 /* Icon Soft Backgrounds */
-.bg-primary-soft { background: var(--color-primary-soft); }
-.bg-success-soft { background: var(--color-success-soft); }
-.bg-warning-soft { background: var(--color-warning-soft); }
-.bg-danger-soft { background: var(--color-danger-soft); }
-.bg-info-soft { background: var(--color-info-soft); }
+.bg-primary-soft {
+  background: var(--color-primary-soft);
+}
+
+.bg-success-soft {
+  background: var(--color-success-soft);
+}
+
+.bg-warning-soft {
+  background: var(--color-warning-soft);
+}
+
+.bg-danger-soft {
+  background: var(--color-danger-soft);
+}
+
+.bg-info-soft {
+  background: var(--color-info-soft);
+}
 
 /* -------------------------------------------------------------------------
    Badges & Pills
@@ -576,70 +605,360 @@
    ------------------------------------------------------------------------- */
 
 /* Text Utilities */
-.text-left { text-align: left; }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
+.text-left {
+  text-align: left;
+}
 
-.font-medium { font-weight: var(--font-weight-medium); }
-.font-semibold { font-weight: var(--font-weight-semibold); }
-.font-bold { font-weight: var(--font-weight-bold); }
+.text-center {
+  text-align: center;
+}
 
-.text-muted { color: var(--color-gray-500); }
-.text-primary { color: var(--color-primary); }
-.text-success { color: var(--color-success); }
-.text-warning { color: var(--color-warning); }
-.text-danger { color: var(--color-danger); }
+.text-right {
+  text-align: right;
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.text-muted {
+  color: var(--color-gray-500);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
 
 /* Spacing Utilities */
-.m-auto { margin: auto; }
-.ml-auto { margin-left: auto; }
-.mr-auto { margin-right: auto; }
-.mx-auto { margin-left: auto; margin-right: auto; }
+.m-auto {
+  margin: auto;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mr-auto {
+  margin-right: auto;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* Display Utilities */
-.d-none { display: none; }
-.d-block { display: block; }
-.d-flex { display: flex; }
-.d-inline-flex { display: inline-flex; }
-.d-grid { display: grid; }
+.d-none {
+  display: none;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-inline-flex {
+  display: inline-flex;
+}
+
+.d-grid {
+  display: grid;
+}
 
 /* Flex Utilities */
-.flex-row { flex-direction: row; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.gap-2 { gap: var(--space-2); }
-.gap-4 { gap: var(--space-4); }
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: var(--space-2);
+}
+
+.gap-4 {
+  gap: var(--space-4);
+}
 
 /* Border Utilities */
-.border { border: 1px solid var(--color-gray-200); }
-.border-0 { border: 0; }
-.rounded-sm { border-radius: var(--radius-sm); }
-.rounded-md { border-radius: var(--radius-md); }
-.rounded-lg { border-radius: var(--radius-lg); }
-.rounded-full { border-radius: var(--radius-full); }
+.border {
+  border: 1px solid var(--color-gray-200);
+}
+
+.border-0 {
+  border: 0;
+}
+
+.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.rounded-full {
+  border-radius: var(--radius-full);
+}
 
 /* Shadow Utilities */
-.shadow-none { box-shadow: var(--shadow-none); }
-.shadow-sm { box-shadow: var(--shadow-sm); }
-.shadow-md { box-shadow: var(--shadow-md); }
-.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-none {
+  box-shadow: var(--shadow-none);
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
 
 /* Cursor Utilities */
-.cursor-pointer { cursor: pointer; }
-.cursor-not-allowed { cursor: not-allowed; }
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
 
 /* ==========================================================================
    3. Responsive Utilities
    ========================================================================== */
 
 @media (max-width: 991px) {
-  .d-lg-none { display: none; }
-  .d-lg-block { display: block; }
-  .d-lg-flex { display: flex; }
+  .d-lg-none {
+    display: none;
+  }
+
+  .d-lg-block {
+    display: block;
+  }
+
+  .d-lg-flex {
+    display: flex;
+  }
 }
 
 @media (min-width: 992px) {
-  .d-none-lg { display: none; }
+  .d-none-lg {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   4. BootstrapVue Overrides (Skinning)
+   ========================================================================== */
+
+/* Buttons */
+.btn {
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-medium) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.5rem 1rem !important;
+  border-width: 1px !important;
+  box-shadow: none !important;
+}
+
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--color-primary-soft) !important;
+  color: var(--color-primary-dark) !important;
+}
+
+.btn-light {
+  background-color: var(--color-gray-100) !important;
+  border-color: var(--color-gray-200) !important;
+  color: var(--color-gray-700) !important;
+}
+
+.btn-light:hover {
+  background-color: var(--color-gray-200) !important;
+}
+
+/* Forms */
+.form-control,
+.form-select,
+.custom-select {
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-sm) !important;
+  background-color: var(--color-gray-50) !important;
+  border: 1px solid var(--color-gray-200) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.35rem 0.6rem !important;
+  height: auto !important;
+  color: var(--color-gray-700) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.form-control:focus {
+  background-color: var(--color-white) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Cards */
+.card {
+  border: 1px solid var(--color-gray-200) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  background-color: var(--color-white) !important;
+}
+
+.card-header {
+  background-color: var(--color-white) !important;
+  border-bottom: 1px solid var(--color-gray-100) !important;
+}
+
+/* Modal */
+.modal-content {
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--color-gray-100) !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--color-gray-100) !important;
+  padding: 1rem 1.5rem !important;
+}
+
+/* Table & B-Table Minimalist */
+.table,
+.b-table {
+  font-family: var(--font-family-base) !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.table thead th,
+.b-table thead th {
+  background-color: var(--color-gray-50) !important;
+  border-top: none !important;
+  border-bottom: 1px solid var(--color-gray-200) !important;
+  color: var(--color-gray-500) !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  padding: 8px 12px !important;
+  vertical-align: middle !important;
+}
+
+.table td,
+.b-table td {
+  padding: 10px 12px !important;
+  color: var(--color-gray-700) !important;
+  border-top: none !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  font-size: var(--font-size-base) !important;
+  vertical-align: middle !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.table tbody tr:hover,
+.b-table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+.table tbody tr:last-child td,
+.b-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Remove default bootstrap borders */
+.table-bordered,
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid var(--color-gray-200) !important;
+}
+
+.table-borderless td,
+.table-borderless th {
+  border: 0 !important;
+}
+
+/* Table Empty/Loading State */
+.b-table-empty-slot,
+.b-table-busy-slot {
+  padding: 3rem !important;
+  text-align: center !important;
+  color: var(--color-gray-400) !important;
+}
+
+/* Custom Checkbox/Switch */
+.custom-control-input:checked~.custom-control-label::before {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.custom-switch .custom-control-label::before {
+  border-radius: 9999px !important;
 }

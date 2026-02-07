@@ -1,9 +1,12 @@
-export default async function ({ $supabase, redirect }) {
-  // Middleware cho trang login/register - chỉ cho phép guest
-  const session = $supabase.auth.session()
-  
-  // Nếu đã đăng nhập -> redirect về dashboard
-  if (session) {
+export default function ({ redirect }) {
+  // Check if user is already logged in via custom auth
+  let user = null
+  if (process.client) {
+    user = localStorage.getItem('auth_user')
+  }
+
+  // If logged in, redirect away from guest-only pages
+  if (user) {
     return redirect('/')
   }
 }

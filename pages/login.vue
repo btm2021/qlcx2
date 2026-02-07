@@ -189,8 +189,8 @@ export default {
 
   methods: {
     async checkAuth() {
-      const session = this.$supabase.auth.session()
-      if (session) {
+      const user = localStorage.getItem('auth_user')
+      if (user) {
         this.$router.push('/')
       }
     },
@@ -200,17 +200,23 @@ export default {
       this.emailError = null
 
       try {
-        const { user, session, error } = await this.$supabase.auth.signIn({
-          email: this.form.email,
-          password: this.form.password
-        })
+        const { data: users, error } = await this.$supabase
+          .from('users')
+          .select('*')
+          .eq('email', this.form.email)
+          .eq('password', this.form.password)
+          .eq('is_active', true)
 
         if (error) throw error
 
-        // Lưu session nếu remember me
-        if (this.form.remember) {
-          localStorage.setItem('remember_me', 'true')
+        if (!users || users.length === 0) {
+          throw new Error('Email hoặc mật khẩu không đúng, hoặc tài khoản đã bị khóa')
         }
+
+        const user = users[0]
+
+        // Local storage for custom session management
+        localStorage.setItem('auth_user', JSON.stringify(user))
 
         this.$bvToast.toast('Đăng nhập thành công!', {
           title: 'Thành công',
@@ -221,29 +227,10 @@ export default {
         this.$router.push('/')
       } catch (error) {
         console.error('Login error details:', error)
-
-        let errorMessage = 'Đăng nhập thất bại'
-
-        if (error.message) {
-          const msg = error.message.toLowerCase()
-          if (msg.includes('invalid login credentials')) {
-            errorMessage = 'Email hoặc mật khẩu không đúng'
-          } else if (msg.includes('email not confirmed')) {
-            errorMessage = 'Email chưa được xác nhận. Vui lòng kiểm tra hộp thư đến.'
-          } else if (msg.includes('user not found')) {
-            errorMessage = 'Tài khoản không tồn tại'
-          } else if (msg.includes('rate limit')) {
-            errorMessage = 'Quá nhiều lần thử. Vui lòng đợi một lát.'
-          } else {
-            errorMessage = error.message
-          }
-        }
-
-        this.$bvToast.toast(errorMessage, {
+        this.$bvToast.toast(error.message || 'Đăng nhập thất bại', {
           title: 'Lỗi đăng nhập',
           variant: 'danger',
-          solid: true,
-          noAutoHide: true
+          solid: true
         })
       } finally {
         this.loading = false

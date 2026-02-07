@@ -119,35 +119,39 @@
 
       <!-- Main Content Area -->
       <main class="main-content">
-        <!-- Top Bar with Breadcrumb -->
-        <div class="page-top-bar">
-          <nav class="breadcrumb-nav" aria-label="breadcrumb">
-            <ol class="breadcrumb-list">
-              <li class="breadcrumb-item">
-                <nuxt-link to="/" class="breadcrumb-link">
-                  <b-icon icon="house-door" class="breadcrumb-icon" />
-                </nuxt-link>
-              </li>
-              <li v-for="(crumb, index) in breadcrumbs" :key="index" class="breadcrumb-separator-wrap">
-                <span class="breadcrumb-separator">
-                  <b-icon icon="chevron-right" />
-                </span>
-              </li>
-              <li class="breadcrumb-item active">
-                <span>{{ pageTitle }}</span>
-              </li>
-            </ol>
-          </nav>
+        <!-- Dashboard Header (Fixed) -->
+        <div class="dashboard-header">
+          <div class="page-top-bar">
+            <nav class="breadcrumb-nav" aria-label="breadcrumb">
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item">
+                  <nuxt-link to="/" class="breadcrumb-link">
+                    <b-icon icon="house-door" class="breadcrumb-icon" />
+                  </nuxt-link>
+                </li>
+                <li v-for="(crumb, index) in breadcrumbs" :key="index" class="breadcrumb-separator-wrap">
+                  <span class="breadcrumb-separator">
+                    <b-icon icon="chevron-right" />
+                  </span>
+                </li>
+                <li class="breadcrumb-item active">
+                  <span>{{ pageTitle }}</span>
+                </li>
+              </ol>
+            </nav>
 
-          <!-- Page Title -->
-          <div class="page-header-inline">
-            <h1 class="page-title">{{ pageTitle }}</h1>
+            <!-- Page Title -->
+            <div class="page-header-inline">
+              <h1 class="page-title">{{ pageTitle }}</h1>
+            </div>
           </div>
         </div>
 
-        <!-- Content Box -->
-        <div class="page-content-box">
-          <Nuxt />
+        <!-- Scrollable Content Area -->
+        <div class="main-scroll-area">
+          <div class="page-content-box">
+            <Nuxt />
+          </div>
         </div>
       </main>
     </div>
@@ -180,13 +184,13 @@ export default {
     ...mapGetters('ui', ['getPageTitle']),
 
     userName() {
-      return this.user?.user_metadata?.full_name || this.user?.email?.split('@')[0] || 'User'
+      return this.user?.full_name || this.user?.email?.split('@')[0] || 'User'
     },
     userEmail() {
       return this.user?.email || ''
     },
     userInitials() {
-      const name = this.user?.user_metadata?.full_name || this.user?.email || 'U'
+      const name = this.user?.full_name || this.user?.email || 'U'
       return name.charAt(0).toUpperCase()
     },
     pageTitle() {
@@ -222,19 +226,19 @@ export default {
   },
 
   mounted() {
-    this.user = this.$supabase.auth.user()
+    const userStr = localStorage.getItem('auth_user')
+    if (userStr) {
+      this.user = JSON.parse(userStr)
+    } else {
+      this.$router.push('/login')
+    }
+
     this.checkMobile()
     this.autoExpandGroup()
 
     window.addEventListener('resize', this.handleResize)
 
-    const { data: { subscription } } = this.$supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') this.$router.push('/login')
-      this.user = session?.user || null
-    })
-
     this.$once('hook:beforeDestroy', () => {
-      subscription?.unsubscribe()
       window.removeEventListener('resize', this.handleResize)
     })
   },
@@ -305,7 +309,7 @@ export default {
 
     async logout() {
       try {
-        await this.$auth.signOut()
+        localStorage.removeItem('auth_user')
         this.$router.push('/login')
       } catch (error) {
         console.error('Logout error:', error)
@@ -684,10 +688,24 @@ export default {
 /* ========== Main Content ========== */
 .main-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.dashboard-header {
+  padding: 1.25rem 1.25rem 0.5rem 1.25rem;
+  background-color: #f8fafc;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.main-scroll-area {
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 1.25rem;
-  background-color: #f8fafc;
+  padding: 0.5rem 1.25rem 1.25rem 1.25rem;
 }
 
 /* ========== Page Top Bar (Breadcrumb + Title) ========== */
@@ -697,10 +715,10 @@ export default {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* ========== Breadcrumb ========== */
@@ -859,9 +877,6 @@ export default {
 
 .noti-text {
   margin: 0;
-  font-size: 0.75rem;
-  color: #374151;
-  line-height: 1.4;
   font-size: 0.8125rem;
   color: #374151;
   line-height: 1.4;

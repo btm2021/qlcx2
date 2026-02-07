@@ -1,18 +1,21 @@
-export default async function ({ $supabase, redirect, route }) {
-  // Lấy session hiện tại
-  const session = $supabase.auth.session()
-  
-  // Các trang public không cần auth
-  const publicPages = ['/login', '/register', '/forgot-password', '/reset-password']
-  const isPublicPage = publicPages.includes(route.path)
+export default function ({ redirect, route }) {
+  // Check custom auth in localStorage
+  let user = null
+  if (process.client) {
+    user = localStorage.getItem('auth_user')
+  }
 
-  // Nếu chưa đăng nhập và truy cập trang cần auth -> redirect login
-  if (!session && !isPublicPage) {
+  // List of public pages that don't need authentication
+  const publicPages = ['/login', '/register', '/forgot-password', '/reset-password']
+  const isPublicPage = publicPages.some(path => route.path.startsWith(path))
+
+  // If not logged in and trying to access a restricted page
+  if (!user && !isPublicPage) {
     return redirect('/login')
   }
 
-  // Nếu đã đăng nhập và vào trang login/register -> redirect dashboard
-  if (session && isPublicPage) {
+  // If already logged in and trying to access public auth pages
+  if (user && isPublicPage) {
     return redirect('/')
   }
 }

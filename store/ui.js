@@ -18,14 +18,41 @@ export const state = () => ({
 
   // Navigation menu
   menuItems: [
-    { key: 'dashboard', label: 'Tổng quan', icon: 'house-door', to: '/' }
+    { key: 'dashboard', label: 'Tổng quan', icon: 'house-door', to: '/' },
+    {
+      key: 'accounts',
+      label: 'Tài khoản',
+      icon: 'person-badge',
+      children: [
+        { key: 'accounts-list', label: 'Danh sách', to: '/accounts' },
+        { key: 'accounts-roles', label: 'Quản lý vai trò', to: '/accounts/roles' },
+
+      ]
+    },
+    {
+      key: 'customers',
+      label: 'Khách hàng',
+      icon: 'people',
+      to: '/customers'
+    },
+    {
+      key: 'contracts',
+      label: 'Hợp đồng',
+      icon: 'file-earmark-text',
+      to: '/contracts'
+    }
   ],
 
   // Page titles mapping
   pageTitles: {
     '/': 'Tổng quan',
+    '/accounts': 'Danh sách tài khoản',
+    '/accounts/roles': 'Quản lý vai trò',
+    '/accounts/create': 'Thêm tài khoản mới',
     '/test': 'Test Page',
-    '/profile': 'Hồ sơ cá nhân'
+    '/profile': 'Hồ sơ cá nhân',
+    '/customers': 'Quản lý khách hàng',
+    '/contracts': 'Quản lý hợp đồng'
   },
 
   // Mobile detection
